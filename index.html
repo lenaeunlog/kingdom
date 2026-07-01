@@ -4,642 +4,632 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SOONGYI AND THE LOST KINGDOM</title>
+    <!-- 인터넷 브라우저용 필수 엔진 및 라이브러리 로드 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- 아이콘을 그리기 위한 라이브러리 추가 -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen">
     <div id="root"></div>
-    <script type="text/babel">
-
-        // import React, { useState, useEffect, useRef } from 'react';
-import { 
-  BookOpen, 
-  Shield, 
-  Sparkles, 
-  Anchor,
-  ShoppingBag,
-  CheckCircle2,
-  X,
-  Crown,
-  Scroll,
-  Map as MapIcon,
-  Feather,
-  History,
-  Compass,
-  Zap,
-  Brain,
-  MessageCircle,
-  Terminal,
-  AlertTriangle,
-  Skull,
-  Ghost
-} from 'lucide-react';
-
-/**
- * ASSETS Configuration
- */
-const ASSETS = {
-  bgm: {
-    title: "https://storage.googleapis.com/eunyeongsmusicfiles/playlist%20%EC%9D%8C%EC%95%85%EC%9D%84%20%EB%93%A3%EB%8A%94%20%EB%8F%99%EC%95%88%20%EA%B7%80%EC%A1%B1%EC%9D%B4%20%EB%90%98%EC%96%B4%EB%B3%B4%EC%84%B8%EC%9A%94%20(%EA%B0%80%EC%82%AC%EC%97%86%EB%8A%94%20%ED%94%8C%EB%A6%AC).mp3", 
-    prologue: "https://storage.googleapis.com/eunyeongsmusicfiles/Bad%20Idea%20Right_%20(Olivia%20Rodrigo%20Cover)%20by%20Caleb%20Chan%20%5BBridgerton%20Season%204%20(Netflix%20Series)%5D.mp3",
-    map: "https://storage.googleapis.com/eunyeongsmusicfiles/Classical%20Music%20for%20When%20You%E2%80%99re%20on%20a%20Deadline.mp3",
-    library: "https://storage.googleapis.com/eunyeongsmusicfiles/dark%20academia%20library%20music.mp3",
-    market: "https://storage.googleapis.com/eunyeongsmusicfiles/medeival%20market%20music.mp3",
-    harbor: "https://storage.googleapis.com/eunyeongsmusicfiles/underwater%20music.mp3",
-    garden: "https://storage.googleapis.com/eunyeongsmusicfiles/Secret%20Garden%202%20%20Soft%20Piano%20Playlist%20%20Ambience%20%20Peaceful%20Fantasy%20Spring%20Ambience%20from%20a%20FairyTale.mp3",
-    palace: "https://storage.googleapis.com/eunyeongsmusicfiles/playlist%20%EC%9D%8C%EC%95%85%EC%9D%84%20%EB%93%A3%EB%8A%94%20%EB%8F%99%EC%95%88%20%EA%B7%80%EC%A1%B1%EC%9D%B4%20%EB%90%98%EC%96%B4%EB%B3%B4%EC%84%B8%EC%9A%94%20(%EA%B0%80%EC%82%AC%EC%97%86%EB%8A%94%20%ED%94%8C%EB%A6%AC).mp3",
-    success: "https://storage.googleapis.com/eunyeongsmusicfiles/H%C3%A4ndel%20Messiah%20-%20Hallelujah%20Chorus.mp3",
-    fail: "https://storage.googleapis.com/eunyeongsmusicfiles/This%20Violin%20Hurts%20More%20Than%20Words%20%E2%80%93%20Deep%20Emotional%20Sad%20Violin%20Solo.mp3"
-  },
-  sfx: {
-    correct: "https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3",
-    wrong: "https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"
-  },
-  backgrounds: {
-    title: "https://lh3.googleusercontent.com/d/1hf3GHQHe-gbndU_mRjhhndlmHiaC-BHK",
-    prologue: "https://lh3.googleusercontent.com/d/1HEs8IYr6uYIbl3-CRZfym_I-6FOg5NBI",
-    map: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1920",
-    library: "https://lh3.googleusercontent.com/d/1rvcnlS4NQeGnJVKUCSPTLEs2aE0EdJju",
-    market: "https://lh3.googleusercontent.com/d/1LWz9VEzlKUjXVyYxQeIt0RD_yazXwdED",
-    harbor: "https://lh3.googleusercontent.com/d/1HfoMpyiJ4riJq3VbfudJMYqXcUlDQlf7", 
-    garden: "https://lh3.googleusercontent.com/d/13mpDCqfqV4ZHUKflgZM-TTXI5H7C9aEf",
-    palace: "https://lh3.googleusercontent.com/d/1ZeOFyVs-MoFThnpNCgZBTQ1g6r5wAh5E",
-    success: "https://images.unsplash.com/photo-1467810563316-b5476525c0f9?auto=format&fit=crop&q=80&w=1920",
-    fail: "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&q=80&w=1920"
-  }
-};
-
-const REGIONS = [
-  {
-    id: 'library',
-    name: 'Ancient Tome Library',
-    Icon: BookOpen,
-    description: 'A sanctuary of forgotten wisdom where ink fades into the void. Thousands of scrolls are crumbling into dust as the rules of grammar dissolve, leaving only fragments of meaningless symbols that Soongyi must reassemble before the history of the kingdom vanishes forever.',
-    intro: 'Soongyi stands before the giant stone shelves. "The grammar here is decaying. We must fix it for Queen Soongsoongyi."',
-    questions: [
-      { q: "What is the past tense of 'see'?", options: ["seed", "saw", "seen", "sees"], ans: 1 },
-      { q: "Which word is an adjective?", options: ["Table", "Quickly", "Beautiful", "Run"], ans: 2 },
-      { q: "Complete: 'She ____ to school every day.'", options: ["go", "going", "goes", "went"], ans: 2 },
-      { q: "What is the opposite of 'Strong'?", options: ["Weak", "Big", "Tough", "Heavy"], ans: 0 },
-      { q: "Which of these is an action verb?", options: ["Apple", "Blue", "Dance", "Under"], ans: 2 },
-      { q: "Plural of 'Child' is...", options: ["Childs", "Children", "Childrens", "Childes"], ans: 1 },
-      { q: "Pick the noun:", options: ["Sing", "Happiness", "Friendly", "Brightly"], ans: 1 },
-      { q: "I ____ a book yesterday.", options: ["read (present)", "read (past)", "reading", "reads"], ans: 1 },
-      { q: "He is ____ than his brother.", options: ["tall", "taller", "tallest", "more tall"], ans: 1 },
-      { q: "Which sentence is correct?", options: ["They is happy.", "They are happy.", "They am happy.", "They be happy."], ans: 1 }
-    ]
-  },
-  {
-    id: 'market',
-    name: 'Merchant of Echoes',
-    Icon: ShoppingBag,
-    description: 'A marketplace trading grain for the mere memory of a voice. The once-bustling stalls are now silent, for the merchants have forgotten how to name their goods and count their coins. Only through the precise language of trade can the economy of words be restored to its former glory.',
-    intro: 'The merchants need precise language to trade their goods. Help them speak as Queen Soongsoongyi commanded.',
-    questions: [
-      { q: "How much ____ this item cost?", options: ["do", "does", "is", "are"], ans: 1 },
-      { q: "I want to buy a ____ of bread.", options: ["cup", "piece", "loaf", "bottle"], ans: 2 },
-      { q: "I need a ____ to prove I bought this.", options: ["receipt", "recipe", "refund", "recept"], ans: 0 },
-      { q: "Where can you buy medical prescriptions?", options: ["Bakery", "Pharmacy", "Library", "Gym"], ans: 1 },
-      { q: "The market is ____ with many people.", options: ["quiet", "empty", "crowded", "dark"], ans: 2 },
-      { q: "How ____ sugar do you need?", options: ["many", "much", "few", "any"], ans: 1 },
-      { q: "These apples are 2 dollars ____.", options: ["each", "every", "all", "once"], ans: 0 },
-      { q: "I would like to ____ an order.", options: ["make", "place", "take", "do"], ans: 1 },
-      { q: "Is there ____ milk in the fridge?", options: ["any", "some", "a", "many"], ans: 0 },
-      { q: "This shirt is too small; I need a larger ____.", options: ["one", "ones", "it", "size"], ans: 0 }
-    ]
-  },
-  {
-    id: 'harbor',
-    name: 'Mist-Bound Harbor',
-    Icon: Anchor,
-    description: 'Iron ships adrift in a sea of grey nothingness. Navigational charts have become unreadable, and the captains struggle to communicate across the fog. Every command must be issued with absolute clarity to guide these lost vessels back to the safe shores of the Kingdom.',
-    intro: 'The ships of Queen Soongsoongyi are lost in the mist. Navigational commands must be perfect.',
-    questions: [
-      { q: "The boat is floating ____ the water.", options: ["in", "on", "under", "at"], ans: 1 },
-      { q: "Turn ____ (opposite of left) now.", options: ["light", "right", "write", "rite"], ans: 1 },
-      { q: "A ____ guides ships using light.", options: ["Lighthouse", "Cloud", "Tree", "Road"], ans: 0 },
-      { q: "Metal anchors are very ____.", options: ["heavy", "light", "soft", "sweet"], ans: 0 },
-      { q: "Can you help ____? I am lost.", options: ["I", "my", "me", "mine"], ans: 2 },
-      { q: "The ship ____ at 5 PM today.", options: ["depart", "departs", "departing", "departed"], ans: 1 },
-      { q: "We are traveling ____ the ocean.", options: ["across", "between", "among", "inside"], ans: 0 },
-      { q: "Be careful! The deck is ____.", options: ["dry", "slippery", "high", "bright"], ans: 1 },
-      { q: "The sailor ____ a thick rope.", options: ["hold", "holds", "holding", "held"], ans: 1 },
-      { q: "Look! There is a ____ in the distance.", options: ["whale", "sand", "water", "sky"], ans: 0 }
-    ]
-  },
-  {
-    id: 'garden',
-    name: 'Ethereal Garden',
-    Icon: Sparkles,
-    description: 'Where petals fall in a terrifying silence. This garden once sang with the harmony of nature, but now the flowers wither as they can no longer hear the correct words. To make the garden bloom again, Soongyi must recite the verses of life that the Great Silence has stolen.',
-    intro: 'Flowers bloom only when they hear the harmony of correct words for Queen Soongsoongyi.',
-    questions: [
-      { q: "Flowers ____ during the spring.", options: ["bloom", "blooms", "blooming", "bloomed"], ans: 0 },
-      { q: "The garden is full ____ roses.", options: ["with", "of", "in", "at"], ans: 1 },
-      { q: "Plants need ____ to grow.", options: ["Milk", "Water", "Pizza", "Soda"], ans: 1 },
-      { q: "A plant begins from a tiny ____.", options: ["tree", "leaf", "seed", "fruit"], ans: 2 },
-      { q: "How ____ is this tree?", options: ["tall", "much", "long", "many"], ans: 0 },
-      { q: "The grass is always ____.", options: ["blue", "green", "red", "yellow"], ans: 1 },
-      { q: "She ____ the flowers every morning.", options: ["water", "waters", "watering", "watered"], ans: 1 },
-      { q: "Don't ____ the grass.", options: ["walk on", "look at", "sing to", "smell"], ans: 0 },
-      { q: "Autumn leaves ____ from the trees.", options: ["fall", "falls", "falling", "fell"], ans: 0 },
-      { q: "Bees ____ honey in the hive.", options: ["make", "makes", "making", "made"], ans: 0 }
-    ]
-  }
-];
-
-export default function App() {
-  const [gameState, setGameState] = useState('title'); 
-  const [stats, setStats] = useState({ wisdom: 5, eloquence: 5, energy: 100 });
-  const [restoredRegions, setRestoredRegions] = useState([]);
-  const [currentRegion, setCurrentRegion] = useState(null);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [logs, setLogs] = useState(["Connecting to Empire Archives..."]);
-  const [showGuide, setShowGuide] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
-  const [score, setScore] = useState(0);
-  const [wrongAnswersCount, setWrongAnswersCount] = useState(0);
-  
-  const [isGlowing, setIsGlowing] = useState(false);
-
-  const audioRef = useRef(null);
-  const sfxRef = useRef(null);
-
-  useEffect(() => {
-    if (audioRef.current) {
-      const getBgm = () => {
-        if (gameState === 'title') return ASSETS.bgm.title;
-        if (gameState === 'prologue') return ASSETS.bgm.prologue;
-        if (gameState === 'map') return ASSETS.bgm.map;
-        if (gameState === 'success') return ASSETS.bgm.success;
-        if (gameState === 'fail') return ASSETS.bgm.fail;
-        if (gameState === 'palace') return ASSETS.bgm.palace;
-        if (currentRegion && (gameState === 'mission' || gameState === 'quiz' || gameState === 'result')) {
-          return ASSETS.bgm[currentRegion.id];
-        }
-        return ASSETS.bgm.map;
-      };
-      
-      const nextSrc = getBgm();
-      if (audioRef.current.src !== nextSrc) {
-        audioRef.current.src = nextSrc;
-        audioRef.current.load();
-        audioRef.current.play().catch(() => {});
-      }
-    }
-  }, [gameState, currentRegion]);
-
-  const addLog = (msg) => setLogs(prev => [`⟡ ${msg}`, ...prev].slice(0, 5));
-
-  const playSfx = (type) => {
-    if (sfxRef.current) {
-      sfxRef.current.src = ASSETS.sfx[type];
-      sfxRef.current.load();
-      sfxRef.current.play().catch(() => {});
-    }
-  };
-
-  const selectRegion = (region) => {
-    if (restoredRegions.includes(region.id)) return;
-    setCurrentRegion(region);
-    setGameState('mission');
-  };
-
-  const startQuiz = () => {
-    setCurrentQuestionIndex(0);
-    setScore(0);
-    setWrongAnswersCount(0);
-    setGameState('quiz');
-    addLog(`Resonating with ${currentRegion.name}...`);
-  };
-
-  const triggerGlow = () => {
-    setIsGlowing(true);
-    setTimeout(() => setIsGlowing(false), 2000);
-  };
-
-  const handleAnswer = (index) => {
-    const isCorrect = index === currentRegion.questions[currentQuestionIndex].ans;
     
-    if (isCorrect) {
-      playSfx('correct');
-      setScore(s => s + 1);
-      setStats(prev => ({ 
-        ...prev, 
-        wisdom: Math.min(prev.wisdom + 2.375, 100),
-        eloquence: Math.min(prev.eloquence + 2.375, 100)
-      }));
-      addLog("The ancient ink responds.");
-      triggerGlow();
-    } else {
-      playSfx('wrong');
-      const newWrongCount = wrongAnswersCount + 1;
-      setWrongAnswersCount(newWrongCount);
-      setStats(prev => ({ ...prev, energy: Math.max(prev.energy - 10, 0) }));
-      addLog("A grammatical dissonance occurred.");
+    <script type="text/babel">
+        // 브라우저 환경에서 Lucide 아이콘을 꺼내 쓰는 설정
+        const { 
+            BookOpen, ShoppingBag, Anchor, Sparkles, 
+            Brain, MessageCircle, Zap, Terminal, Scroll, 
+            Crown, X, CheckCircle2, Skull, History, Feather 
+        } = Lucide;
 
-      if (newWrongCount >= 5) {
-        setGameState('fail');
-        return;
-      }
-    }
+        /**
+         * ASSETS Configuration
+         */
+        const ASSETS = {
+          bgm: {
+            title: "https://storage.googleapis.com/eunyeongsmusicfiles/playlist%20%EC%9D%8C%EC%95%85%EC%9D%84%20%EB%93%A3%EB%8A%94%20%EB%8F%99%EC%95%88%20%EA%B7%80%EC%A1%B1%EC%9D%B4%20%EB%90%98%EC%96%B4%EB%B3%B4%EC%84%B8%EC%9A%94%20(%EA%B0%80%EC%82%AC%EC%97%86%EB%8A%94%20%ED%94%8C%EB%A6%AC).mp3", 
+            prologue: "https://storage.googleapis.com/eunyeongsmusicfiles/Bad%20Idea%20Right_%20(Olivia%20Rodrigo%20Cover)%20by%20Caleb%20Chan%20%5BBridgerton%20Season%204%20(Netflix%20Series)%5D.mp3",
+            map: "https://storage.googleapis.com/eunyeongsmusicfiles/Classical%20Music%20for%20When%20You%E2%80%99re%20on%20a%20Deadline.mp3",
+            library: "https://storage.googleapis.com/eunyeongsmusicfiles/dark%20academia%20library%20music.mp3",
+            market: "https://storage.googleapis.com/eunyeongsmusicfiles/medeival%20market%20music.mp3",
+            harbor: "https://storage.googleapis.com/eunyeongsmusicfiles/underwater%20music.mp3",
+            garden: "https://storage.googleapis.com/eunyeongsmusicfiles/Secret%20Garden%202%20%20Soft%20Piano%20Playlist%20%20Ambience%20%20Peaceful%20Fantasy%20Spring%20Ambience%20from%20a%20FairyTale.mp3",
+            palace: "https://storage.googleapis.com/eunyeongsmusicfiles/playlist%20%EC%9D%8C%EC%95%85%EC%9D%84%20%EB%93%A3%EB%8A%94%20%EB%8F%99%EC%95%88%20%EA%B7%80%EC%A1%B1%EC%9D%B4%20%EB%90%98%EC%96%B4%EB%B3%B4%EC%84%B8%EC%9A%94%20(%EA%B0%80%EC%82%AC%EC%97%86%EB%8A%94%20%ED%94%8C%EB%A6%AC).mp3",
+            success: "https://storage.googleapis.com/eunyeongsmusicfiles/H%C3%A4ndel%20Messiah%20-%20Hallelujah%20Chorus.mp3",
+            fail: "https://storage.googleapis.com/eunyeongsmusicfiles/This%20Violin%20Hurts%20More%20Than%20Words%20%E2%80%93%20Deep%20Emotional%20Sad%20Violin%20Solo.mp3"
+          },
+          sfx: {
+            correct: "https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3",
+            wrong: "https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"
+          },
+          backgrounds: {
+            title: "https://lh3.googleusercontent.com/d/1hf3GHQHe-gbndU_mRjhhndlmHiaC-BHK",
+            prologue: "https://lh3.googleusercontent.com/d/1HEs8IYr6uYIbl3-CRZfym_I-6FOg5NBI",
+            map: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1920",
+            library: "https://lh3.googleusercontent.com/d/1rvcnlS4NQeGnJVKUCSPTLEs2aE0EdJju",
+            market: "https://lh3.googleusercontent.com/d/1LWz9VEzlKUjXVyYxQeIt0RD_yazXwdED",
+            harbor: "https://lh3.googleusercontent.com/d/1HfoMpyiJ4riJq3VbfudJMYqXcUlDQlf7", 
+            garden: "https://lh3.googleusercontent.com/d/13mpDCqfqV4ZHUKflgZM-TTXI5H7C9aEf",
+            palace: "https://lh3.googleusercontent.com/d/1ZeOFyVs-MoFThnpNCgZBTQ1g6r5wAh5E",
+            success: "https://images.unsplash.com/photo-1467810563316-b5476525c0f9?auto=format&fit=crop&q=80&w=1920",
+            fail: "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&q=80&w=1920"
+          }
+        };
 
-    if (currentQuestionIndex < currentRegion.questions.length - 1) {
-      setCurrentQuestionIndex(i => i + 1);
-    } else {
-      setGameState('result');
-    }
-  };
+        const REGIONS = [
+          {
+            id: 'library',
+            name: 'Ancient Tome Library',
+            Icon: BookOpen,
+            description: 'A sanctuary of forgotten wisdom where ink fades into the void. Thousands of scrolls are crumbling into dust as the rules of grammar dissolve, leaving only fragments of meaningless symbols that Soongyi must reassemble before the history of the kingdom vanishes forever.',
+            intro: 'Soongyi stands before the giant stone shelves. "The grammar here is decaying. We must fix it for Queen Soongsoongyi."',
+            questions: [
+              { q: "What is the past tense of 'see'?", options: ["seed", "saw", "seen", "sees"], ans: 1 },
+              { q: "Which word is an adjective?", options: ["Table", "Quickly", "Beautiful", "Run"], ans: 2 },
+              { q: "Complete: 'She ____ to school every day.'", options: ["go", "going", "goes", "went"], ans: 2 },
+              { q: "What is the opposite of 'Strong'?", options: ["Weak", "Big", "Tough", "Heavy"], ans: 0 },
+              { q: "Which of these is an action verb?", options: ["Apple", "Blue", "Dance", "Under"], ans: 2 },
+              { q: "Plural of 'Child' is...", options: ["Childs", "Children", "Childrens", "Childes"], ans: 1 },
+              { q: "Pick the noun:", options: ["Sing", "Happiness", "Friendly", "Brightly"], ans: 1 },
+              { q: "I ____ a book yesterday.", options: ["read (present)", "read (past)", "reading", "reads"], ans: 1 },
+              { q: "He is ____ than his brother.", options: ["tall", "taller", "tallest", "more tall"], ans: 1 },
+              { q: "Which sentence is correct?", options: ["They is happy.", "They are happy.", "They am happy.", "They be happy."], ans: 1 }
+            ]
+          },
+          {
+            id: 'market',
+            name: 'Merchant of Echoes',
+            Icon: ShoppingBag,
+            description: 'A marketplace trading grain for the mere memory of a voice. The once-bustling stalls are now silent, for the merchants have forgotten how to name their goods and count their coins. Only through the precise language of trade can the economy of words be restored to its former glory.',
+            intro: 'The merchants need precise language to trade their goods. Help them speak as Queen Soongsoongyi commanded.',
+            questions: [
+              { q: "How much ____ this item cost?", options: ["do", "does", "is", "are"], ans: 1 },
+              { q: "I want to buy a ____ of bread.", options: ["cup", "piece", "loaf", "bottle"], ans: 2 },
+              { q: "I need a ____ to prove I bought this.", options: ["receipt", "recipe", "refund", "recept"], ans: 0 },
+              { q: "Where can you buy medical prescriptions?", options: ["Bakery", "Pharmacy", "Library", "Gym"], ans: 1 },
+              { q: "The market is ____ with many people.", options: ["quiet", "empty", "crowded", "dark"], ans: 2 },
+              { q: "How ____ sugar do you need?", options: ["many", "much", "few", "any"], ans: 1 },
+              { q: "These apples are 2 dollars ____.", options: ["each", "every", "all", "once"], ans: 0 },
+              { q: "I would like to ____ an order.", options: ["make", "place", "take", "do"], ans: 1 },
+              { q: "Is there ____ milk in the fridge?", options: ["any", "some", "a", "many"], ans: 0 },
+              { q: "This shirt is too small; I need a larger ____.", options: ["one", "ones", "it", "size"], ans: 0 }
+            ]
+          },
+          {
+            id: 'harbor',
+            name: 'Mist-Bound Harbor',
+            Icon: Anchor,
+            description: 'Iron ships adrift in a sea of grey nothingness. Navigational charts have become unreadable, and the captains struggle to communicate across the fog. Every command must be issued with absolute clarity to guide these lost vessels back to the safe shores of the Kingdom.',
+            intro: 'The ships of Queen Soongsoongyi are lost in the mist. Navigational commands must be perfect.',
+            questions: [
+              { q: "The boat is floating ____ the water.", options: ["in", "on", "under", "at"], ans: 1 },
+              { q: "Turn ____ (opposite of left) now.", options: ["light", "right", "write", "rite"], ans: 1 },
+              { q: "A ____ guides ships using light.", options: ["Lighthouse", "Cloud", "Tree", "Road"], ans: 0 },
+              { q: "Metal anchors are very ____.", options: ["heavy", "light", "soft", "sweet"], ans: 0 },
+              { q: "Can you help ____? I am lost.", options: ["I", "my", "me", "mine"], ans: 2 },
+              { q: "The ship ____ at 5 PM today.", options: ["depart", "departs", "departing", "departed"], ans: 1 },
+              { q: "We are traveling ____ the ocean.", options: ["across", "between", "among", "inside"], ans: 0 },
+              { q: "Be careful! The deck is ____.", options: ["dry", "slippery", "high", "bright"], ans: 1 },
+              { q: "The sailor ____ a thick rope.", options: ["hold", "holds", "holding", "held"], ans: 1 },
+              { q: "Look! There is a ____ in the distance.", options: ["whale", "sand", "water", "sky"], ans: 0 }
+            ]
+          },
+          {
+            id: 'garden',
+            name: 'Ethereal Garden',
+            Icon: Sparkles,
+            description: 'Where petals fall in a terrifying silence. This garden once sang with the harmony of nature, but now the flowers wither as they can no longer hear the correct words. To make the garden bloom again, Soongyi must recite the verses of life that the Great Silence has stolen.',
+            intro: 'Flowers bloom only when they hear the harmony of correct words for Queen Soongsoongyi.',
+            questions: [
+              { q: "Flowers ____ during the spring.", options: ["bloom", "blooms", "blooming", "bloomed"], ans: 0 },
+              { q: "The garden is full ____ roses.", options: ["with", "of", "in", "at"], ans: 1 },
+              { q: "Plants need ____ to grow.", options: ["Milk", "Water", "Pizza", "Soda"], ans: 1 },
+              { q: "A plant begins from a tiny ____.", options: ["tree", "leaf", "seed", "fruit"], ans: 2 },
+              { q: "How ____ is this tree?", options: ["tall", "much", "long", "many"], ans: 0 },
+              { q: "The grass is always ____.", options: ["blue", "green", "red", "yellow"], ans: 1 },
+              { q: "She ____ the flowers every morning.", options: ["water", "waters", "watering", "watered"], ans: 1 },
+              { q: "Don't ____ the grass.", options: ["walk on", "look at", "sing to", "smell"], ans: 0 },
+              { q: "Autumn leaves ____ from the trees.", options: ["fall", "falls", "falling", "fell"], ans: 0 },
+              { q: "Bees ____ honey in the hive.", options: ["make", "makes", "making", "made"], ans: 0 }
+            ]
+          }
+        ];
 
-  const HorizontalStatBar = ({ label, value, color, Icon }) => (
-    <div className="w-full flex flex-col gap-2 mb-4 group">
-      <div className="flex items-center justify-between px-1">
-        <div className="flex items-center gap-2">
-            <Icon size={16} className="text-white/50" />
-            <span className="text-[12px] font-black tracking-widest text-white/70 uppercase">{label}</span>
-        </div>
-        <span className="text-[12px] font-mono text-white/50">{Math.round(value)}%</span>
-      </div>
-      <div className="h-2.5 w-full bg-white/5 rounded-full overflow-hidden relative border border-white/5">
-        <div 
-          className="absolute top-0 left-0 h-full transition-all duration-1000 ease-out" 
-          style={{ width: `${value}%`, backgroundColor: color, boxShadow: `0 0 10px ${color}60` }}
-        />
-      </div>
-    </div>
-  );
+        function App() {
+          const [gameState, setGameState] = React.useState('title'); 
+          const [stats, setStats] = React.useState({ wisdom: 5, eloquence: 5, energy: 100 });
+          const [restoredRegions, setRestoredRegions] = React.useState([]);
+          const [currentRegion, setCurrentRegion] = React.useState(null);
+          const [currentQuestionIndex, setCurrentQuestionIndex] = React.useState(0);
+          const [logs, setLogs] = React.useState(["Connecting to Empire Archives..."]);
+          const [showGuide, setShowGuide] = React.useState(false);
+          const [showHistory, setShowHistory] = React.useState(false);
+          const [score, setScore] = React.useState(0);
+          const [wrongAnswersCount, setWrongAnswersCount] = React.useState(0);
+          
+          const [isGlowing, setIsGlowing] = React.useState(false);
 
-  const GlassPanel = ({ children, className = "", transparency = "bg-black/60" }) => (
-    <div className={`backdrop-blur-3xl ${transparency} border border-white/10 rounded-[3rem] shadow-2xl p-12 ${className}`}>
-        {children}
-    </div>
-  );
+          const audioRef = React.useRef(null);
+          const sfxRef = React.useRef(null);
 
-  const getActiveBackground = () => {
-    if (gameState === 'title') return ASSETS.backgrounds.title;
-    if (gameState === 'prologue') return ASSETS.backgrounds.prologue;
-    if (gameState === 'map') return ASSETS.backgrounds.map;
-    if (gameState === 'success') return ASSETS.backgrounds.success;
-    if (gameState === 'fail') return ASSETS.backgrounds.fail;
-    if (gameState === 'palace') return ASSETS.backgrounds.palace;
-    if (currentRegion) return ASSETS.backgrounds[currentRegion.id];
-    return ASSETS.backgrounds.map;
-  };
+          React.useEffect(() => {
+            if (audioRef.current) {
+              const getBgm = () => {
+                if (gameState === 'title') return ASSETS.bgm.title;
+                if (gameState === 'prologue') return ASSETS.bgm.prologue;
+                if (gameState === 'map') return ASSETS.bgm.map;
+                if (gameState === 'success') return ASSETS.bgm.success;
+                if (gameState === 'fail') return ASSETS.bgm.fail;
+                if (gameState === 'palace') return ASSETS.bgm.palace;
+                if (currentRegion && (gameState === 'mission' || gameState === 'quiz' || gameState === 'result')) {
+                  return ASSETS.bgm[currentRegion.id];
+                }
+                return ASSETS.bgm.map;
+              };
+              
+              const nextSrc = getBgm();
+              if (audioRef.current.src !== nextSrc) {
+                audioRef.current.src = nextSrc;
+                audioRef.current.load();
+                audioRef.current.play().catch(() => {});
+              }
+            }
+          }, [gameState, currentRegion]);
 
-  return (
-    <div className="flex h-screen w-full bg-black text-white overflow-hidden relative select-none">
-      <audio ref={audioRef} loop />
-      <audio ref={sfxRef} />
-      
-      {/* Background layer */}
-      <div 
-        className={`fixed inset-0 z-0 bg-cover bg-center transition-all duration-[2000ms] ${gameState === 'title' ? 'scale-100 opacity-100' : 'scale-105 opacity-90'}`}
-        style={{ backgroundImage: `url(${getActiveBackground()})` }}
-      />
-      <div className={`fixed inset-0 z-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 transition-opacity duration-1000 ${
-        gameState === 'title' ? 'opacity-20' : 
-        gameState === 'prologue' || gameState === 'fail' ? 'opacity-40' : 
-        'opacity-100 bg-black/40'}`} 
-      />
+          const addLog = (msg) => setLogs(prev => [`⟡ ${msg}`, ...prev].slice(0, 5));
 
-      {/* Sidebar (Hub) */}
-      {gameState !== 'title' && gameState !== 'fail' && (
-        <aside className="relative z-50 w-72 h-full flex flex-col items-center bg-black/60 backdrop-blur-2xl border-r border-white/10 p-8 animate-in overflow-hidden font-serif">
-            <div className="flex flex-col items-center gap-4 mb-10 w-full">
-                <div className="relative group">
-                    <div className={`w-24 h-24 rounded-full border-2 transition-all duration-500 p-1.5 shadow-[0_0_30px_rgba(255,255,255,0.05)] flex items-center justify-center relative overflow-hidden ${
-                        isGlowing ? 'border-amber-400 shadow-[0_0_35px_#fbbf24] bg-amber-500/10 scale-110' : 'border-white/20 bg-black/40'
-                    }`}>
-                        <span className="text-5xl filter drop-shadow-lg z-10">🐒</span>
-                        <div className={`absolute inset-0 transition-opacity duration-500 ${isGlowing ? 'opacity-40 bg-amber-400' : 'opacity-10 bg-white'}`} />
-                    </div>
-                    <div 
-                      onClick={() => setShowHistory(true)}
-                      className={`absolute -bottom-1 -right-1 w-8 h-8 rounded-full flex items-center justify-center text-black shadow-xl ring-4 ring-black cursor-pointer hover:bg-white transition-all active:scale-90 ${
-                        isGlowing ? 'bg-amber-400 scale-125' : 'bg-amber-500'
-                    }`}>
-                        <Crown size={16} />
-                    </div>
+          const playSfx = (type) => {
+            if (sfxRef.current) {
+              sfxRef.current.src = ASSETS.sfx[type];
+              sfxRef.current.load();
+              sfxRef.current.play().catch(() => {});
+            }
+          };
+
+          const selectRegion = (region) => {
+            if (restoredRegions.includes(region.id)) return;
+            setCurrentRegion(region);
+            setGameState('mission');
+          };
+
+          const startQuiz = () => {
+            setCurrentQuestionIndex(0);
+            setScore(0);
+            setWrongAnswersCount(0);
+            setGameState('quiz');
+            addLog(`Resonating with ${currentRegion.name}...`);
+          };
+
+          const triggerGlow = () => {
+            setIsGlowing(true);
+            setTimeout(() => setIsGlowing(false), 2000);
+          };
+
+          const handleAnswer = (index) => {
+            const isCorrect = index === currentRegion.questions[currentQuestionIndex].ans;
+            
+            if (isCorrect) {
+              playSfx('correct');
+              setScore(s => s + 1);
+              setStats(prev => ({ 
+                ...prev, 
+                wisdom: Math.min(prev.wisdom + 2.375, 100),
+                 eloquence: Math.min(prev.eloquence + 2.375, 100)
+              }));
+              addLog("The ancient ink responds.");
+              triggerGlow();
+            } else {
+              playSfx('wrong');
+              const newWrongCount = wrongAnswersCount + 1;
+              setWrongAnswersCount(newWrongCount);
+              setStats(prev => ({ ...prev, energy: Math.max(prev.energy - 10, 0) }));
+              addLog("A grammatical dissonance occurred.");
+
+              if (newWrongCount >= 5) {
+                setGameState('fail');
+                return;
+              }
+            }
+
+            if (currentQuestionIndex < currentRegion.questions.length - 1) {
+              setCurrentQuestionIndex(i => i + 1);
+            } else {
+              setGameState('result');
+            }
+          };
+
+          const HorizontalStatBar = ({ label, value, color, Icon }) => (
+            <div className="w-full flex flex-col gap-2 mb-4 group">
+              <div className="flex items-center justify-between px-1">
+                <div className="flex items-center gap-2">
+                    <Icon size={16} className="text-white/50" />
+                    <span className="text-[12px] font-black tracking-widest text-white/70 uppercase">{label}</span>
                 </div>
-                <div className="text-center">
-                    <h2 className={`text-sm font-black tracking-[0.3em] uppercase transition-colors duration-500 ${isGlowing ? 'text-amber-400' : 'text-white/80'}`}>Soongyi</h2>
-                    <p className="text-[10px] text-white/30 uppercase tracking-[0.2em]">The Last Scribe</p>
-                </div>
-            </div>
-
-            <div className="w-full mb-10 px-1">
-                <HorizontalStatBar label="Wisdom" value={stats.wisdom} color="#ffffff" Icon={Brain} />
-                <HorizontalStatBar label="Eloquence" value={stats.eloquence} color="#ff69b4" Icon={MessageCircle} />
-                <HorizontalStatBar label="Vitality" value={stats.energy} color="#f43f5e" Icon={Zap} />
-            </div>
-
-            <div className="w-full flex-1 flex flex-col min-h-0">
-                <div className="flex items-center gap-2 mb-4 px-1">
-                    <Terminal size={16} className="text-white/40" />
-                    <span className="text-[12px] font-black tracking-[0.2em] uppercase text-white/50">Ancient Archive</span>
-                </div>
-                <div className="flex-1 bg-black/40 rounded-2xl border border-white/5 p-5 overflow-hidden relative">
-                    <div className="space-y-4">
-                        {logs.map((log, i) => (
-                            <div key={i} className={`text-[12px] leading-relaxed font-medium transition-all duration-700 ${i === 0 ? (isGlowing ? 'text-amber-400 opacity-100' : 'text-white opacity-100') : 'text-white/30'}`}>
-                                <span className="mr-2 opacity-30">⟡</span>
-                                {log}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-
-            <button 
-                onClick={() => setShowGuide(true)}
-                className="mt-8 w-full py-4 flex items-center justify-center gap-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white hover:text-black transition-all group"
-            >
-                <Scroll size={16} className="group-hover:rotate-12 transition-transform" />
-                <span className="text-[10px] font-black uppercase tracking-widest">Read Codex</span>
-            </button>
-        </aside>
-      )}
-
-      {/* Main content area */}
-      <main className="flex-1 relative z-10 flex flex-col items-center justify-center p-8 overflow-hidden font-serif">
-        {gameState === 'title' && (
-          <div className="text-center animate-in">
-             <div className="mb-14 relative">
-                <div className="absolute inset-0 blur-[100px] bg-amber-500/20 rounded-full scale-150" />
-                <h1 className="cursive-title text-7xl md:text-8xl font-normal leading-tight mb-8 pt-20">
-                    Soongyi and the Lost Kingdom
-                </h1>
-                <div className="w-48 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto mb-8 shadow-[0_0_10px_white]" />
-             </div>
-             <button 
-                onClick={() => setGameState('prologue')} 
-                className="group relative px-16 py-7 border border-white/40 bg-white/10 backdrop-blur-sm hover:bg-white hover:text-black transition-all duration-700 rounded-full font-bold tracking-[0.8em] uppercase text-[12px] overflow-hidden"
-             >
-                <span className="relative z-10">Unseal Prophecy</span>
-                <div className="absolute inset-0 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-             </button>
-          </div>
-        )}
-
-        {gameState === 'prologue' && (
-          <div className="w-full h-full flex flex-col items-center justify-end pb-20 animate-in">
-            <GlassPanel className="max-w-4xl text-center mx-12 shadow-[0_0_80px_rgba(0,0,0,0.8)]" transparency="bg-black/50">
-                <h2 className="text-[12px] font-bold tracking-[0.7em] text-white/60 uppercase mb-8 border-b border-white/10 pb-4">The Great Erasure</h2>
-                <div className="space-y-6 text-2xl leading-[1.8] italic text-white drop-shadow-lg">
-                <p>"Once, all things breathed through language."</p>
-                <p>But the <span className="text-white font-bold border-b-2 border-white/40">Great Silence</span> fell, and the words of Queen Soongsoongyi were lost.</p>
-                <p>Soongyi must reclaim the lost Logos through the ancient trials.</p>
-                </div>
-                <button onClick={() => setGameState('map')} className="mt-12 inline-flex items-center gap-6 px-14 py-6 bg-white text-black font-bold tracking-[0.5em] uppercase hover:px-20 transition-all rounded-full text-[12px] shadow-2xl">
-                    Venture Forth <History size={18} />
-                </button>
-            </GlassPanel>
-          </div>
-        )}
-
-        {gameState === 'map' && (
-          <div className="w-full max-w-6xl animate-in px-10">
-            <div className="text-center mb-14">
-                <h2 className="text-[12px] tracking-[1em] text-white/40 uppercase font-bold">Divine Navigator</h2>
-                <p className="mt-4 text-white/20 italic tracking-[0.2em] text-[11px]">Select a region to restore its story</p>
-            </div>
-            <div className="grid grid-cols-2 gap-10">
-                {REGIONS.map(region => {
-                const isRestored = restoredRegions.includes(region.id);
-                return (
-                    <button
-                        key={region.id}
-                        disabled={isRestored}
-                        onClick={() => selectRegion(region)}
-                        className={`relative group p-10 rounded-[3.5rem] transition-all text-center border overflow-hidden ${
-                        isRestored
-                        ? "bg-black/80 border-[#39ff14]/30 shadow-[0_0_40px_rgba(57,255,20,0.15)] cursor-not-allowed"
-                        : "bg-black/50 backdrop-blur-2xl border-white/10 hover:border-white/40 shadow-2xl hover:-translate-y-2"
-                        }`}
-                    >
-                        <div className="flex flex-col items-center gap-6 relative z-10">
-                            <div className={`p-6 border rounded-full transition-all shadow-lg ${
-                                isRestored ? "bg-[#39ff14]/10 border-[#39ff14]/40 text-[#39ff14]" : "bg-white/5 border-white/10 group-hover:bg-white group-hover:text-black"
-                            }`}>
-                                <region.Icon size={40} />
-                            </div>
-                            <h3 className={`text-2xl font-bold tracking-[0.3em] uppercase flex items-center gap-4 ${isRestored ? 'text-[#39ff14]' : 'text-white'}`}>
-                                {region.name}
-                                {isRestored && <CheckCircle2 className="w-6 h-6 animate-pulse" />}
-                            </h3>
-                        </div>
-                    </button>
-                )})}
-            </div>
-            {restoredRegions.length === 4 && (
-              <div className="mt-16 text-center">
-                  <button onClick={() => setGameState('palace')} className="px-20 py-8 bg-white/5 backdrop-blur-3xl border border-white/20 rounded-full text-[13px] font-bold tracking-[0.8em] uppercase hover:bg-white hover:text-black transition-all animate-pulse shadow-[0_0_50px_rgba(255,255,255,0.1)]">
-                    Ascend to Palace
-                  </button>
+                <span className="text-[12px] font-mono text-white/50">{Math.round(value)}%</span>
               </div>
-            )}
-          </div>
-        )}
-
-        {gameState === 'mission' && currentRegion && (
-            <div className="w-full max-w-5xl animate-in px-10">
-                <GlassPanel transparency="bg-black/80" className="text-center">
-                    <div className="mb-10 flex flex-col items-center">
-                        <div className="p-8 bg-white/5 rounded-full border border-white/10 mb-8">
-                             <currentRegion.Icon size={64} className="text-white/60" />
-                        </div>
-                        <h2 className="text-[14px] font-black uppercase tracking-[1em] mb-12 text-white/30 border-b border-white/10 pb-4">{currentRegion.name}</h2>
-                    </div>
-                    <div className="space-y-8 mb-16 px-12">
-                        <p className="text-2xl italic leading-relaxed text-white drop-shadow-md">
-                            {currentRegion.description}
-                        </p>
-                        <div className="w-16 h-px bg-white/20 mx-auto" />
-                        <p className="text-lg italic text-white/50">
-                            "{currentRegion.intro}"
-                        </p>
-                    </div>
-                    <div className="flex gap-6 justify-center">
-                        <button onClick={() => setGameState('map')} className="px-10 py-6 border border-white/20 text-white font-bold tracking-[0.4em] uppercase transition-all rounded-full text-[10px] hover:bg-white/10">
-                            Return
-                        </button>
-                        <button onClick={startQuiz} className="px-16 py-6 bg-white text-black font-bold tracking-[0.5em] uppercase transition-all rounded-full text-[12px] hover:shadow-[0_0_40px_rgba(255,255,255,0.4)]">
-                            Begin Restoration
-                        </button>
-                    </div>
-                </GlassPanel>
+              <div className="h-2.5 w-full bg-white/5 rounded-full overflow-hidden relative border border-white/5">
+                <div 
+                  className="absolute top-0 left-0 h-full transition-all duration-1000 ease-out" 
+                  style={{ width: `${value}%`, backgroundColor: color, boxShadow: `0 0 10px ${color}60` }}
+                />
+              </div>
             </div>
-        )}
+          );
 
-        {gameState === 'quiz' && currentRegion && (
-            <div className="w-full max-w-5xl animate-in px-10">
-                <GlassPanel transparency="bg-black/80">
-                    <div className="flex flex-col">
-                        <div className="mb-12 flex justify-between items-center border-b border-white/10 pb-8">
-                            <span className="text-[12px] font-bold text-white/40 uppercase tracking-[0.5em]">Tome Shard {currentQuestionIndex + 1} / 10</span>
-                            <div className="flex gap-2">
-                                {[...Array(10)].map((_, i) => (
-                                    <div key={i} className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${i <= currentQuestionIndex ? 'bg-white shadow-[0_0_8px_white]' : 'bg-white/10'}`} />
+          const GlassPanel = ({ children, className = "", transparency = "bg-black/60" }) => (
+            <div className={`backdrop-blur-3xl ${transparency} border border-white/10 rounded-[3rem] shadow-2xl p-12 ${className}`}>
+                {children}
+            </div>
+          );
+
+          const getActiveBackground = () => {
+            if (gameState === 'title') return ASSETS.backgrounds.title;
+            if (gameState === 'prologue') return ASSETS.backgrounds.prologue;
+            if (gameState === 'map') return ASSETS.backgrounds.map;
+            if (gameState === 'success') return ASSETS.backgrounds.success;
+            if (gameState === 'fail') return ASSETS.backgrounds.fail;
+            if (gameState === 'palace') return ASSETS.backgrounds.palace;
+            if (currentRegion) return ASSETS.backgrounds[currentRegion.id];
+            return ASSETS.backgrounds.map;
+          };
+
+          return (
+            <div className="flex h-screen w-full bg-black text-white overflow-hidden relative select-none">
+              <audio ref={audioRef} loop />
+              <audio ref={sfxRef} />
+              
+              {/* Background layer */}
+              <div 
+                className={`fixed inset-0 z-0 bg-cover bg-center transition-all duration-[2000ms] ${gameState === 'title' ? 'scale-100 opacity-100' : 'scale-105 opacity-90'}`}
+                style={{ backgroundImage: `url(${getActiveBackground()})` }}
+              />
+              <div className={`fixed inset-0 z-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 transition-opacity duration-1000 ${
+                gameState === 'title' ? 'opacity-20' : 
+                gameState === 'prologue' || gameState === 'fail' ? 'opacity-40' : 
+                'opacity-100 bg-black/40'}`} 
+              />
+
+              {/* Sidebar (Hub) */}
+              {gameState !== 'title' && gameState !== 'fail' && (
+                <aside className="relative z-50 w-72 h-full flex flex-col items-center bg-black/60 backdrop-blur-2xl border-r border-white/10 p-8 animate-in overflow-hidden font-serif">
+                    <div className="flex flex-col items-center gap-4 mb-10 w-full">
+                        <div className="relative group">
+                            <div className={`w-24 h-24 rounded-full border-2 transition-all duration-500 p-1.5 shadow-[0_0_30px_rgba(255,255,255,0.05)] flex items-center justify-center relative overflow-hidden ${
+                                isGlowing ? 'border-amber-400 shadow-[0_0_35px_#fbbf24] bg-amber-500/10 scale-110' : 'border-white/20 bg-black/40'
+                            }`}>
+                                <span className="text-5xl filter drop-shadow-lg z-10">🐒</span>
+                                <div className={`absolute inset-0 transition-opacity duration-500 ${isGlowing ? 'opacity-40 bg-amber-400' : 'opacity-10 bg-white'}`} />
+                            </div>
+                            <div 
+                              onClick={() => setShowHistory(true)}
+                              className={`absolute -bottom-1 -right-1 w-8 h-8 rounded-full flex items-center justify-center text-black shadow-xl ring-4 ring-black cursor-pointer hover:bg-white transition-all active:scale-90 ${
+                                isGlowing ? 'bg-amber-400 scale-125' : 'bg-amber-500'
+                            }`}>
+                                <Crown size={16} />
+                            </div>
+                        </div>
+                        <div className="text-center">
+                            <h2 className={`text-sm font-black tracking-[0.3em] uppercase transition-colors duration-500 ${isGlowing ? 'text-amber-400' : 'text-white/80'}`}>Soongyi</h2>
+                            <p className="text-[10px] text-white/30 uppercase tracking-[0.2em]">The Last Scribe</p>
+                        </div>
+                    </div>
+
+                    <div className="w-full mb-10 px-1">
+                        <HorizontalStatBar label="Wisdom" value={stats.wisdom} color="#ffffff" Icon={Brain} />
+                        <HorizontalStatBar label="Eloquence" value={stats.eloquence} color="#ff69b4" Icon={MessageCircle} />
+                        <HorizontalStatBar label="Vitality" value={stats.energy} color="#f43f5e" Icon={Zap} />
+                    </div>
+
+                    <div className="w-full flex-1 flex flex-col min-h-0">
+                        <div className="flex items-center gap-2 mb-4 px-1">
+                            <Terminal size={16} className="text-white/40" />
+                            <span className="text-[12px] font-black tracking-[0.2em] uppercase text-white/50">Ancient Archive</span>
+                        </div>
+                        <div className="flex-1 bg-black/40 rounded-2xl border border-white/5 p-5 overflow-hidden relative">
+                            <div className="space-y-4">
+                                {logs.map((log, i) => (
+                                    <div key={i} className={`text-[12px] leading-relaxed font-medium transition-all duration-700 ${i === 0 ? (isGlowing ? 'text-amber-400 opacity-100' : 'text-white opacity-100') : 'text-white/30'}`}>
+                                        <span className="mr-2 opacity-30">⟡</span>
+                                        {log}
+                                    </div>
                                 ))}
                             </div>
                         </div>
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                            <h3 className="text-4xl italic text-white leading-tight pr-8">"{currentRegion.questions[currentQuestionIndex].q}"</h3>
-                            <div className="grid grid-cols-1 gap-4">
-                                {currentRegion.questions[currentQuestionIndex].options.map((opt, i) => (
-                                    <button key={i} onClick={() => handleAnswer(i)} className="group p-6 text-left border border-white/10 hover:border-white/50 bg-white/5 rounded-2xl italic text-lg transition-all flex items-center justify-between hover:bg-white/10">
-                                        <div className="flex items-center gap-6"><span className="text-[12px] opacity-20 font-sans font-bold w-6">0{i+1}</span>{opt}</div>
-                                        <div className="w-2 h-2 rounded-full bg-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
                     </div>
-                </GlassPanel>
-            </div>
-        )}
 
-        {gameState === 'result' && currentRegion && (
-            <div className="w-full max-w-5xl animate-in px-10">
-                <GlassPanel transparency="bg-black/80" className="text-center py-12">
-                    <div className="text-7xl mb-12 opacity-80 animate-bounce">{score >= 8 ? "📜" : "🕯️"}</div>
-                    <h2 className="text-3xl font-black text-white mb-8 tracking-[0.4em] uppercase italic">Sacred Verdict</h2>
-                    <p className="text-xl text-white/50 italic mb-14 max-w-xl mx-auto">
-                        {score >= 8 ? `Success. ${score}/10 shards restored. The seal is broken.` : `Weak Resonance. ${score}/10 shards collected. You need at least 8 to proceed.`}
-                    </p>
-                    <button onClick={() => { if (score >= 8) setRestoredRegions(prev => [...prev, currentRegion.id]); setCurrentRegion(null); setGameState('map'); }} className="px-16 py-6 bg-white text-black font-bold tracking-[0.5em] uppercase transition-all rounded-full text-[12px] shadow-2xl">
-                        {score >= 8 ? "Collect Essence" : "Try Again"}
+                    <button 
+                        onClick={() => setShowGuide(true)}
+                        className="mt-8 w-full py-4 flex items-center justify-center gap-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white hover:text-black transition-all group"
+                    >
+                        <Scroll size={16} className="group-hover:rotate-12 transition-transform" />
+                        <span className="text-[10px] font-black uppercase tracking-widest">Read Codex</span>
                     </button>
-                </GlassPanel>
-            </div>
-        )}
+                </aside>
+              )}
 
-        {gameState === 'fail' && (
-            <div className="w-full h-full flex items-center justify-center p-4 overflow-y-auto">
-                <div className="max-w-4xl w-full animate-in flex flex-col items-center">
-                    <div className="relative mb-12">
-                        <Skull className="w-24 h-24 text-red-700/60 mb-6 mx-auto animate-pulse" />
-                        <div className="absolute inset-0 bg-red-600/10 blur-[50px] rounded-full" />
-                    </div>
-                    <h2 className="text-4xl md:text-6xl font-black text-red-700 mb-10 tracking-[0.4em] uppercase text-center">
-                        The Eternal Requiem
-                    </h2>
-                    <GlassPanel className="text-center space-y-8 px-8 md:px-16 py-16 border-red-900/40" transparency="bg-black/90">
-                        <p className="text-xl md:text-2xl italic leading-[1.8] text-zinc-400">
-                            Your tongue has hardened into the heavy lead of silence. The noble languages of Queen Soongsoongyi that once sustained the world have turned to cold ash. All that remains is a tragic melody.
-                        </p>
-                        <button onClick={() => window.location.reload()} className="px-20 py-8 border-2 border-red-900 text-red-700 font-bold tracking-[0.6em] uppercase hover:bg-red-900 hover:text-white transition-all rounded-full text-[12px]">
-                            Attempt Rebirth
+              {/* Main content area */}
+              <main className="flex-1 relative z-10 flex flex-col items-center justify-center p-8 overflow-hidden font-serif">
+                {gameState === 'title' && (
+                  <div className="text-center animate-in">
+                     <div className="mb-14 relative">
+                        <div className="absolute inset-0 blur-[100px] bg-amber-500/20 rounded-full scale-150" />
+                        <h1 className="cursive-title text-7xl md:text-8xl font-normal leading-tight mb-8 pt-20">
+                            Soongyi and the Lost Kingdom
+                        </h1>
+                        <div className="w-48 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto mb-8 shadow-[0_0_10px_white]" />
+                     </div>
+                     <button 
+                        onClick={() => setGameState('prologue')} 
+                        className="group relative px-16 py-7 border border-white/40 bg-white/10 backdrop-blur-sm hover:bg-white hover:text-black transition-all duration-700 rounded-full font-bold tracking-[0.8em] uppercase text-[12px] overflow-hidden"
+                     >
+                        <span className="relative z-10">Unseal Prophecy</span>
+                        <div className="absolute inset-0 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+                     </button>
+                  </div>
+                )}
+
+                {gameState === 'prologue' && (
+                  <div className="w-full h-full flex flex-col items-center justify-end pb-20 animate-in">
+                    <GlassPanel className="max-w-4xl text-center mx-12 shadow-[0_0_80px_rgba(0,0,0,0.8)]" transparency="bg-black/50">
+                        <h2 className="text-[12px] font-bold tracking-[0.7em] text-white/60 uppercase mb-8 border-b border-white/10 pb-4">The Great Erasure</h2>
+                        <div className="space-y-6 text-2xl leading-[1.8] italic text-white drop-shadow-lg">
+                        <p>"Once, all things breathed through language."</p>
+                        <p>But the <span className="text-white font-bold border-b-2 border-white/40">Great Silence</span> fell, and the words of Queen Soongsoongyi were lost.</p>
+                        <p>Soongyi must reclaim the lost Logos through the ancient trials.</p>
+                        </div>
+                        <button onClick={() => setGameState('map')} className="mt-12 inline-flex items-center gap-6 px-14 py-6 bg-white text-black font-bold tracking-[0.5em] uppercase hover:px-20 transition-all rounded-full text-[12px] shadow-2xl">
+                            Venture Forth <History size={18} />
                         </button>
                     </GlassPanel>
+                  </div>
+                )}
+
+                {gameState === 'map' && (
+                  <div className="w-full max-w-6xl animate-in px-10">
+                    <div className="text-center mb-14">
+                        <h2 className="text-[12px] tracking-[1em] text-white/40 uppercase font-bold">Divine Navigator</h2>
+                        <p className="mt-4 text-white/20 italic tracking-[0.2em] text-[11px]">Select a region to restore its story</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-10">
+                        {REGIONS.map(region => {
+                        const isRestored = restoredRegions.includes(region.id);
+                        return (
+                            <button
+                                key={region.id}
+                                disabled={isRestored}
+                                onClick={() => selectRegion(region)}
+                                className={`relative group p-10 rounded-[3.5rem] transition-all text-center border overflow-hidden ${
+                                isRestored
+                                ? "bg-black/80 border-[#39ff14]/30 shadow-[0_0_40px_rgba(57,255,20,0.15)] cursor-not-allowed"
+                                : "bg-black/50 backdrop-blur-2xl border-white/10 hover:border-white/40 shadow-2xl hover:-translate-y-2"
+                                }`}
+                            >
+                                <div className="flex flex-col items-center gap-6 relative z-10">
+                                    <div className={`p-6 border rounded-full transition-all shadow-lg ${
+                                        isRestored ? "bg-[#39ff14]/10 border-[#39ff14]/40 text-[#39ff14]" : "bg-white/5 border-white/10 group-hover:bg-white group-hover:text-black"
+                                    }`}>
+                                        <region.Icon size={40} />
+                                    </div>
+                                    <h3 className={`text-2xl font-bold tracking-[0.3em] uppercase flex items-center gap-4 ${isRestored ? 'text-[#39ff14]' : 'text-white'}`}>
+                                        {region.name}
+                                        {isRestored && <CheckCircle2 className="w-6 h-6 animate-pulse" />}
+                                    </h3>
+                                </div>
+                            </button>
+                        )})}
+                    </div>
+                    {restoredRegions.length === 4 && (
+                      <div className="mt-16 text-center">
+                          <button onClick={() => setGameState('palace')} className="px-20 py-8 bg-white/5 backdrop-blur-3xl border border-white/20 rounded-full text-[13px] font-bold tracking-[0.8em] uppercase hover:bg-white hover:text-black transition-all animate-pulse shadow-[0_0_50px_rgba(255,255,255,0.1)]">
+                            Ascend to Palace
+                          </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {gameState === 'mission' && currentRegion && (
+                    <div className="w-full max-w-5xl animate-in px-10">
+                        <GlassPanel transparency="bg-black/80" className="text-center">
+                            <div className="mb-10 flex flex-col items-center">
+                                <div className="p-8 bg-white/5 rounded-full border border-white/10 mb-8">
+                                     <currentRegion.Icon size={64} className="text-white/60" />
+                                </div>
+                                <h2 className="text-[14px] font-black uppercase tracking-[1em] mb-12 text-white/30 border-b border-white/10 pb-4">{currentRegion.name}</h2>
+                            </div>
+                            <div className="space-y-8 mb-16 px-12">
+                                <p className="text-2xl italic leading-relaxed text-white drop-shadow-md">
+                                    {currentRegion.description}
+                                </p>
+                                <div className="w-16 h-px bg-white/20 mx-auto" />
+                                <p className="text-lg italic text-white/50">
+                                    "{currentRegion.intro}"
+                                </p>
+                            </div>
+                            <div className="flex gap-6 justify-center">
+                                <button onClick={() => setGameState('map')} className="px-10 py-6 border border-white/20 text-white font-bold tracking-[0.4em] uppercase transition-all rounded-full text-[10px] hover:bg-white/10">
+                                    Return
+                                </button>
+                                <button onClick={startQuiz} className="px-16 py-6 bg-white text-black font-bold tracking-[0.5em] uppercase transition-all rounded-full text-[12px] hover:shadow-[0_0_40px_rgba(255,255,255,0.4)]">
+                                    Begin Restoration
+                                </button>
+                            </div>
+                        </GlassPanel>
+                    </div>
+                )}
+
+                {gameState === 'quiz' && currentRegion && (
+                    <div className="w-full max-w-5xl animate-in px-10">
+                        <GlassPanel transparency="bg-black/80">
+                            <div className="flex flex-col">
+                                <div className="mb-12 flex justify-between items-center border-b border-white/10 pb-8">
+                                    <span className="text-[12px] font-bold text-white/40 uppercase tracking-[0.5em]">Tome Shard {currentQuestionIndex + 1} / 10</span>
+                                    <div className="flex gap-2">
+                                        {[...Array(10)].map((_, i) => (
+                                            <div key={i} className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${i <= currentQuestionIndex ? 'bg-white shadow-[0_0_8px_white]' : 'bg-white/10'}`} />
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                                    <h3 className="text-4xl italic text-white leading-tight pr-8">"{currentRegion.questions[currentQuestionIndex].q}"</h3>
+                                    <div className="grid grid-cols-1 gap-4">
+                                        {currentRegion.questions[currentQuestionIndex].options.map((opt, i) => (
+                                            <button key={i} onClick={() => handleAnswer(i)} className="group p-6 text-left border border-white/10 hover:border-white/50 bg-white/5 rounded-2xl italic text-lg transition-all flex items-center justify-between hover:bg-white/10">
+                                                <div className="flex items-center gap-6"><span className="text-[12px] opacity-20 font-sans font-bold w-6">0{i+1}</span>{opt}</div>
+                                                <div className="w-2 h-2 rounded-full bg-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </GlassPanel>
+                    </div>
+                )}
+
+                {gameState === 'result' && currentRegion && (
+                    <div className="w-full max-w-5xl animate-in px-10">
+                        <GlassPanel transparency="bg-black/80" className="text-center py-12">
+                            <div className="text-7xl mb-12 opacity-80 animate-bounce">{score >= 8 ? "📜" : "🕯️"}</div>
+                            <h2 className="text-3xl font-black text-white mb-8 tracking-[0.4em] uppercase italic">Sacred Verdict</h2>
+                            <p className="text-xl text-white/50 italic mb-14 max-w-xl mx-auto">
+                                {score >= 8 ? `Success. ${score}/10 shards restored. The seal is broken.` : `Weak Resonance. ${score}/10 shards collected. You need at least 8 to proceed.`}
+                            </p>
+                            <button onClick={() => { if (score >= 8) setRestoredRegions(prev => [...prev, currentRegion.id]); setCurrentRegion(null); setGameState('map'); }} className="px-16 py-6 bg-white text-black font-bold tracking-[0.5em] uppercase transition-all rounded-full text-[12px] shadow-2xl">
+                                {score >= 8 ? "Collect Essence" : "Try Again"}
+                            </button>
+                        </GlassPanel>
+                    </div>
+                )}
+
+                {gameState === 'fail' && (
+                    <div className="w-full h-full flex items-center justify-center p-4 overflow-y-auto">
+                        <div className="max-w-4xl w-full animate-in flex flex-col items-center">
+                            <div className="relative mb-12">
+                                <Skull className="w-24 h-24 text-red-700/60 mb-6 mx-auto animate-pulse" />
+                                <div className="absolute inset-0 bg-red-600/10 blur-[50px] rounded-full" />
+                            </div>
+                            <h2 className="text-4xl md:text-6xl font-black text-red-700 mb-10 tracking-[0.4em] uppercase text-center">
+                                The Eternal Requiem
+                            </h2>
+                            <GlassPanel className="text-center space-y-8 px-8 md:px-16 py-16 border-red-900/40" transparency="bg-black/90">
+                                <p className="text-xl md:text-2xl italic leading-[1.8] text-zinc-400">
+                                    Your tongue has hardened into the heavy lead of silence. The noble languages of Queen Soongsoongyi that once sustained the world have turned to cold ash. All that remains is a tragic melody.
+                                </p>
+                                <button onClick={() => window.location.reload()} className="px-20 py-8 border-2 border-red-900 text-red-700 font-bold tracking-[0.6em] uppercase hover:bg-red-900 hover:text-white transition-all rounded-full text-[12px]">
+                                    Attempt Rebirth
+                                </button>
+                            </GlassPanel>
+                        </div>
+                    </div>
+                )}
+
+                {gameState === 'palace' && (
+                  <GlassPanel className="max-w-4xl animate-in text-center px-20" transparency="bg-black/40">
+                    <h2 className="text-6xl font-black mb-12 tracking-[0.4em] uppercase text-white drop-shadow-2xl">The Celestial Throne</h2>
+                    <p className="text-2xl italic text-white mb-16 leading-relaxed">The throne room of Queen Soongsoongyi is finally within reach.</p>
+                    <button onClick={() => setGameState('success')} className="px-24 py-10 bg-white text-black text-xl font-bold tracking-[0.8em] uppercase transition-all rounded-full">
+                        Awaken the Word
+                    </button>
+                  </GlassPanel>
+                )}
+
+                {gameState === 'success' && (
+                  <div className="text-center animate-in">
+                    <h1 className="text-8xl mb-14 animate-pulse">✨</h1>
+                    <h2 className="text-5xl font-black text-white mb-10 tracking-[0.5em] uppercase">The Logos Reborn</h2>
+                    <p className="text-xl italic text-white/50 mb-20 max-w-3xl leading-relaxed mx-auto">
+                        The silence is broken. Your wisdom has restored the kingdom of Queen Soongsoongyi.
+                    </p>
+                    <button onClick={() => window.location.reload()} className="px-16 py-6 border-2 border-white/20 text-white text-[12px] font-bold tracking-[0.8em] uppercase hover:bg-white hover:text-black transition-all rounded-full">
+                        Seal the Archives
+                    </button>
+                  </div>
+                )}
+              </main>
+
+              {/* Guide Modal */}
+              {showGuide && (
+                <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-6 backdrop-blur-3xl animate-in font-serif">
+                  <div className="w-full max-w-lg relative bg-black/80 border border-white/10 rounded-[2.5rem] p-10 shadow-2xl">
+                    <button onClick={() => setShowGuide(false)} className="absolute top-6 right-6 text-white/30 hover:text-white p-2">
+                      <X size={20} />
+                    </button>
+                    <div className="text-center mb-8">
+                        <Scroll size={30} className="text-white/30 mx-auto mb-4" />
+                        <h2 className="text-xl font-black text-white tracking-[0.4em] uppercase">Chronicle Guide</h2>
+                    </div>
+                    <div className="space-y-6 text-white/60 text-sm italic leading-relaxed">
+                      <p>Restore 4 regions to access the Palace. Correct answers increase Wisdom/Eloquence.</p>
+                      <p>Solve 8 out of 10 questions per region correctly to pass.</p>
+                      <p>Vitality drops by 10% per mistake. 5 mistakes lead to Failure.</p>
+                    </div>
+                    <button onClick={() => setShowGuide(false)} className="w-full mt-8 py-4 bg-white text-black font-black uppercase tracking-widest rounded-2xl text-[10px]">
+                        Confirm Codex
+                    </button>
+                  </div>
                 </div>
-            </div>
-        )}
+              )}
 
-        {gameState === 'palace' && (
-          <GlassPanel className="max-w-4xl animate-in text-center px-20" transparency="bg-black/40">
-            <h2 className="text-6xl font-black mb-12 tracking-[0.4em] uppercase text-white drop-shadow-2xl">The Celestial Throne</h2>
-            <p className="text-2xl italic text-white mb-16 leading-relaxed">The throne room of Queen Soongsoongyi is finally within reach.</p>
-            <button onClick={() => setGameState('success')} className="px-24 py-10 bg-white text-black text-xl font-bold tracking-[0.8em] uppercase transition-all rounded-full">
-                Awaken the Word
-            </button>
-          </GlassPanel>
-        )}
-
-        {gameState === 'success' && (
-          <div className="text-center animate-in">
-            <h1 className="text-8xl mb-14 animate-pulse">✨</h1>
-            <h2 className="text-5xl font-black text-white mb-10 tracking-[0.5em] uppercase">The Logos Reborn</h2>
-            <p className="text-xl italic text-white/50 mb-20 max-w-3xl leading-relaxed mx-auto">
-                The silence is broken. Your wisdom has restored the kingdom of Queen Soongsoongyi.
-            </p>
-            <button onClick={() => window.location.reload()} className="px-16 py-6 border-2 border-white/20 text-white text-[12px] font-bold tracking-[0.8em] uppercase hover:bg-white hover:text-black transition-all rounded-full">
-                Seal the Archives
-            </button>
-          </div>
-        )}
-      </main>
-
-      {/* Guide Modal */}
-      {showGuide && (
-        <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-6 backdrop-blur-3xl animate-in font-serif">
-          <div className="w-full max-w-lg relative bg-black/80 border border-white/10 rounded-[2.5rem] p-10 shadow-2xl">
-            <button onClick={() => setShowGuide(false)} className="absolute top-6 right-6 text-white/30 hover:text-white p-2">
-              <X size={20} />
-            </button>
-            <div className="text-center mb-8">
-                <Scroll size={30} className="text-white/30 mx-auto mb-4" />
-                <h2 className="text-xl font-black text-white tracking-[0.4em] uppercase">Chronicle Guide</h2>
-            </div>
-            <div className="space-y-6 text-white/60 text-sm italic leading-relaxed">
-              <p>Restore 4 regions to access the Palace. Correct answers increase Wisdom/Eloquence.</p>
-              <p>Solve 8 out of 10 questions per region correctly to pass.</p>
-              <p>Vitality drops by 10% per mistake. 5 mistakes lead to Failure.</p>
-            </div>
-            <button onClick={() => setShowGuide(false)} className="w-full mt-8 py-4 bg-white text-black font-black uppercase tracking-widest rounded-2xl text-[10px]">
-                Confirm Codex
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Soongyi History Modal */}
-      {showHistory && (
-        <div className="fixed inset-0 z-[150] bg-black/95 flex items-center justify-center p-8 backdrop-blur-md animate-in font-serif">
-          <div className="w-full max-w-2xl relative bg-zinc-900/90 border border-amber-500/30 rounded-[3rem] p-12 shadow-[0_0_100px_rgba(245,158,11,0.1)] overflow-y-auto max-h-[90vh]">
-            <button onClick={() => setShowHistory(false)} className="absolute top-8 right-10 text-white/40 hover:text-amber-500 transition-all p-2 group">
-              <X size={32} className="group-hover:rotate-90 transition-transform duration-300" />
-            </button>
-            <div className="mb-10 flex items-center gap-6">
-                <div className="w-20 h-20 rounded-2xl bg-amber-500/10 border border-amber-500/40 flex items-center justify-center text-4xl">🐒</div>
-                <div>
-                    <h2 className="text-2xl font-black text-amber-500 tracking-[0.2em] uppercase mb-1">Soongyi's Memory</h2>
-                    <p className="text-[10px] text-white/30 uppercase tracking-[0.4em]">Chronicles of the Fallen Age</p>
+              {/* Soongyi History Modal */}
+              {showHistory && (
+                <div className="fixed inset-0 z-[150] bg-black/95 flex items-center justify-center p-8 backdrop-blur-md animate-in font-serif">
+                  <div className="w-full max-w-2xl relative bg-zinc-900/90 border border-amber-500/30 rounded-[3rem] p-12 shadow-[0_0_100px_rgba(245,158,11,0.1)] overflow-y-auto max-h-[90vh]">
+                    <button onClick={() => setShowHistory(false)} className="absolute top-8 right-10 text-white/40 hover:text-amber-500 transition-all p-2 group">
+                      <X size={32} className="group-hover:rotate-90 transition-transform duration-300" />
+                    </button>
+                    <div className="mb-10 flex items-center gap-6">
+                        <div className="w-20 h-20 rounded-2xl bg-amber-500/10 border border-amber-500/40 flex items-center justify-center text-4xl">🐒</div>
+                        <div>
+                            <h2 className="text-2xl font-black text-amber-500 tracking-[0.2em] uppercase mb-1">Soongyi's Memory</h2>
+                            <p className="text-[10px] text-white/30 uppercase tracking-[0.4em]">Chronicles of the Fallen Age</p>
+                        </div>
+                    </div>
+                    <div className="prose prose-invert space-y-6 text-white/80 leading-relaxed text-lg italic">
+                        <p className="first-letter:text-5xl first-letter:font-black first-letter:mr-3 first-letter:float-left first-letter:text-amber-500">
+                            "I was not always a mere scribe in this dusty, desolate library. Long ago, in an age where every word breathed with a radiant light, I served as the head gardener of the Golden Palace of Queen Soongsoongyi."
+                        </p>
+                        <p>
+                            "But then came the day of the 'Great Silence.' The grammar and syntax that held our world together began to lose their strength. People forgot each other's names, and eventually, even the word for 'love' could no longer be pronounced correctly."
+                        </p>
+                        <p>
+                            "For centuries, I have waited among these crumbling books for someone to rediscover the lost language. Every single answer you provide resonates through these halls, rebuilding the pillars of the forgotten empire of Queen Soongsoongyi."
+                        </p>
+                        <p>
+                            "Stay strong, traveler. When your wisdom is complete, I shall finally be able to cast off this old scribe's cloak and return to my gardens to meet the singing flowers under the grace of Queen Soongsoongyi."
+                        </p>
+                    </div>
+                    <div className="mt-12 pt-8 border-t border-white/10 text-center">
+                        <Feather className="text-amber-500/20 mx-auto w-12 h-12 mb-4" />
+                        <p className="text-[10px] text-white/20 uppercase tracking-[0.5em]">End of Archive Record #0802</p>
+                    </div>
+                  </div>
                 </div>
-            </div>
-            <div className="prose prose-invert space-y-6 text-white/80 leading-relaxed text-lg italic">
-                <p className="first-letter:text-5xl first-letter:font-black first-letter:mr-3 first-letter:float-left first-letter:text-amber-500">
-                    "I was not always a mere scribe in this dusty, desolate library. Long ago, in an age where every word breathed with a radiant light, I served as the head gardener of the Golden Palace of Queen Soongsoongyi."
-                </p>
-                <p>
-                    "But then came the day of the 'Great Silence.' The grammar and syntax that held our world together began to lose their strength. People forgot each other's names, and eventually, even the word for 'love' could no longer be pronounced correctly."
-                </p>
-                <p>
-                    "For centuries, I have waited among these crumbling books for someone to rediscover the lost language. Every single answer you provide resonates through these halls, rebuilding the pillars of the forgotten empire of Queen Soongsoongyi."
-                </p>
-                <p>
-                    "Stay strong, traveler. When your wisdom is complete, I shall finally be able to cast off this old scribe's cloak and return to my gardens to meet the singing flowers under the grace of Queen Soongsoongyi."
-                </p>
-            </div>
-            <div className="mt-12 pt-8 border-t border-white/10 text-center">
-                <Feather className="text-amber-500/20 mx-auto w-12 h-12 mb-4" />
-                <p className="text-[10px] text-white/20 uppercase tracking-[0.5em]">End of Archive Record #0802</p>
-            </div>
-          </div>
-        </div>
-      )}
+              )}
 
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Great+Vibes&display=swap');
-        body { font-family: 'Playfair Display', serif; background: #000; margin: 0; overflow: hidden; }
-        .cursive-title {
-          font-family: 'Great Vibes', cursive;
-          background: linear-gradient(to bottom, #ffffff 0%, #fccd4d 50%, #f8b500 51%, #fff9e6 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          filter: drop-shadow(0px 0px 15px rgba(255,255,255,0.3));
+              <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Great+Vibes&display=swap');
+                body { font-family: 'Playfair Display', serif; background: #000; margin: 0; overflow: hidden; }
+                .cursive-title {
+                  font-family: 'Great Vibes', cursive;
+                  background: linear-gradient(to bottom, #ffffff 0%, #fccd4d 50%, #f8b500 51%, #fff9e6 100%);
+                  -webkit-background-clip: text;
+                  -webkit-text-fill-color: transparent;
+                  filter: drop-shadow(0px 0px 15px rgba(255,255,255,0.3));
+                }
+                @keyframes fade-in { 
+                  from { opacity: 0; transform: translateY(20px); } 
+                  to { opacity: 1; transform: translateY(0); } 
+                }
+                .animate-in { animation: fade-in 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+              `}</style>
+            </div>
+          );
         }
-        @keyframes fade-in { 
-          from { opacity: 0; transform: translateY(20px); } 
-          to { opacity: 1; transform: translateY(0); } 
-        }
-        .animate-in { animation: fade-in 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-      `}</style>
-    </div>
-  );
-}
+
+        // 브라우저 렌더링 구동
+        const root = RoyalReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
 
     </script>
 </body>
